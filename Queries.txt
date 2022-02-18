@@ -1,0 +1,52 @@
+/* Query 1 */
+SELECT
+	e.FirstName || ' ' || e.LastName AS Employee_Full_Name,
+	COUNT( c.SupportRepId ) AS number_of_cutomers 
+FROM
+	Employee e
+	JOIN Customer c ON e.EmployeeId = c.SupportRepId 
+GROUP BY
+	e.FirstName || ' ' || e.LastName;
+####################################################################
+/* Query 2 */
+SELECT
+	c.FirstName || ' ' || c.LastName AS Customer_Full_Name,
+	SUM( i.Total ) AS Total_Purchases_Value 
+FROM
+	Customer c
+	LEFT JOIN Invoice i ON c.Customerid = i.Customerid 
+GROUP BY
+	c.FirstName || ' ' || c.LastName 
+ORDER BY
+	Total_Purchases_Value DESC 
+	LIMIT 10;
+####################################################################
+/* Query 3 */
+SELECT
+	p.Name,
+	n.PlaylistId,
+	n.total_duration / 3600000 AS total_duration_in_hours 
+FROM
+	Playlist p
+	JOIN (
+	SELECT
+		pt.PlaylistId,
+		SUM( t.Milliseconds ) AS total_duration 
+	FROM
+		PlaylistTrack pt
+		JOIN Track t ON pt.TrackId = t.TrackId 
+	GROUP BY
+		pt.PlaylistId 
+	ORDER BY
+	total_duration DESC ) n 
+	ON p.PlaylistId = n.PlaylistId;
+####################################################################
+/* Query 4 */
+SELECT
+	m.Name AS media_type,
+	COUNT( t.MediaTypeId ) AS number_of_tracks 
+FROM
+	MediaType m
+	JOIN Track t ON m.MediaTypeId = t.MediaTypeId 
+GROUP BY
+	m.Name;
